@@ -6,14 +6,17 @@ Gem::Specification.new do |s|
   s.name        = "live"
   s.version     = Live::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
+  s.authors     = ["Macario Ortega"]
+  s.email       = ["macarui@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Live is like IRC only it is meant to be used from a text editor}
+  s.description = %q{Live is like IRC only it is meant to be used from a text editor, it essentially polls a *nix pipe and evaluates its contents. 
+It was devised for audiovisual livecoding (ruby-processing and scruby), a block can be bound to a key and can be called later by a keystroke.
+}
+  
+  s.add_dependency 'highline'
 
   s.rubyforge_project = "live"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
