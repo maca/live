@@ -31,6 +31,6 @@ To use from vim paste this in your .vimrc file
 
     map <Leader>x :call EvalLiveRuby()<enter>
 
-Then by pressing leader and x you will execute the file or range in the live session
+Then by pressing leader and x you will execute the range in the live session
 
 
