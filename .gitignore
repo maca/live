@@ -2,4 +2,5 @@ pkg/*
 *.gem
 .bundle
 *.swp
+*.swo
 

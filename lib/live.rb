@@ -6,10 +6,40 @@ require 'ext/object'
 
 module Live 
   class Notice < String; end
+
+  class Context
+    def initialize session
+      @session = session
+      @binding = binding
+    end
+
+    def eval string
+      begin
+        super string, @binding
+      rescue Exception => exception
+        SystemExit === exception ? quit! : exception
+      end
+    end
+
+    # Binds a proc to a keystroke
+    def bind_key key, &block
+      @session.key_bindings[key.to_s.unpack('c').first] = block
+      Notice.new "Key '#{key}' is bound to an action" if block
+    end
+
+    def quit!
+      @session.quit!
+    end
+
+    def reset!
+      @session.key_bindings.clear
+      @session.new_context
+    end
+  end
   
   class Session
     include HighLine::SystemExtensions
-    attr_reader :path
+    attr_reader :path, :key_bindings
     
     # Starts a live session using a named pipe to receive code from a remote source and evaluates it within a context, a bit like an IRB session but evaluates code sent from a text editor
     def initialize path = "#{Dir.tmpdir}/live-rb" 
@@ -20,27 +50,14 @@ module Live
       @pipe, @path, @key_bindings = File.open(path, 'r+'), path, {}
 
       begin
-        get_binding and key_listen and run!
+        new_context and key_listen and run!
       ensure
-        quit!
-      end
-    end
-
-    def safe_eval *args
-      begin
-        eval *args
-      rescue Exception => exception
-        SystemExit === exception ? quit! : exception
+        File.delete(path) if File.exists? path
       end
     end
 
     def quit!
       File.delete(@path) && exit
-    end
-    
-    # Starts a loop that checks the named pipe and evaluate its contents, will be called on initialize
-    def run! 
-      loop { puts safe_eval(@pipe.gets, @context) }
     end
   
     def puts obj
@@ -48,6 +65,16 @@ module Live
       # Hackish solution for cursor position
       super "\e[200D"
       super "\e[2A"
+    end
+
+    def new_context
+      @context = Context.new(self)
+    end
+
+    private
+    # Starts a loop that checks the named pipe and evaluate its contents, will be called on initialize
+    def run! 
+      loop { puts @context.eval(@pipe.gets) }
     end
 
     # Listen for keystrokes and calls bound procs
@@ -59,17 +86,5 @@ module Live
         end
       end
     end
-    
-    # Binds a proc to a keystroke
-    def bind_key key, &block
-      @key_bindings[key.to_s.unpack('c').first] = block
-      Notice.new "Key '#{key}' is bound to an action" if block
-    end
-    
-    def get_binding
-      @context = binding
-    end
-    
-    alias :reload! :get_binding
   end
 end
