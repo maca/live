@@ -1,6 +1,6 @@
 == Live
 
-Live is like IRC only it is meant to be used from a text editor, it essentially polls a *nix pipe and evaluates its contents. 
+Live is like irb only it is meant to be used from a text editor, it essentially polls a *nix pipe and evaluates its contents. 
 It was devised for audiovisual livecoding (ruby-processing and scruby), a block can be bound to a key and can be called later by a keystroke.
 
 == Install
