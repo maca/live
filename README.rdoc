@@ -1,26 +1,26 @@
-Live
-====
+# Live
 
 Live is like IRC only it is meant to be used from a text editor, it essentially polls a *nix pipe and evaluates its contents. 
 It was devised for audiovisual livecoding (ruby-processing and scruby), a block can be bound to a key and can be called later by a keystroke.
 
-Usage
------
+
+# Usage
+
 
     $ live
 
 open a new terminal
 
-    $ echo 'hello' > /tmp/live-rb
+    $ echo ' "hello" ' > /tmp/live-rb
 
 You will see the code evaluated in the first terminal
 
-    $ echo 'bind_key(:a){ 'key a was pressed' }' > /tmp/live-rb
+    $ echo 'bind_key(:a){ "key a was pressed" }' > /tmp/live-rb
 
 When you press the key 'a' with focus on the first terminal it will call the block
 
-Vim
----
+
+# Vim
 
 To use from vim paste this in your .vimrc file
 
@@ -32,5 +32,3 @@ To use from vim paste this in your .vimrc file
     map <Leader>x :call EvalLiveRuby()<enter>
 
 Then by pressing leader and x you will execute the range in the live session
-
-
